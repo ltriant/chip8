@@ -1,0 +1,3 @@
+*.o
+chip8
+roms/
