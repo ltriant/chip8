@@ -1,9 +1,27 @@
 # chip8
 
-A CHIP-8 emulator...
+An emulator for the CHIP-8 system, because every emulator developer should probably write one for fun.
+
+# Building and Running
+
+[SDL2](https://libsdl.org/) is required for the graphics, and it can be installed via many different package managers:
+
+```
+$ brew install sdl2
+$ sudo apt-get install libsdl2-dev
+$ sudo yum install SDL2-devel
+```
+
+Or see the [libsdl installation documentation](https://wiki.libsdl.org/Installation) for more options.
+
+After that, it can be built with `make`:
+
+```
+$ make all
+$ ./chip8 roms/tetris.ch8
+```
 
 # Things To Do
 
-1. The timers need to countdown at 60Hz
-2. Frame rate needs to be capped
-3. Get Pong, Tetris, and Lander working
+1. Frame rate needs to be properly capped
+2. The sound timer needs to actually make a sound when it hits zero

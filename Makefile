@@ -9,9 +9,9 @@ OBJ=chip8.o machine.o
 chip8: $(OBJ)
 
 clean:
-	$(RM) -v $(OBJ) tree
+	$(RM) -v $(OBJ) chip8
 
 install: chip8
-	$(INSTALL_PROGRAM) -s tree $(DESTDIR)$(PREFIX)/bin/tree
+	$(INSTALL_PROGRAM) -s chip8 $(DESTDIR)$(PREFIX)/bin/chip8
 
 all: chip8
