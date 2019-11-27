@@ -195,8 +195,6 @@ static void power_up(struct Machine *ctx)
 		if (should_render) {
 			for (size_t y = 0; y < SCREEN_HEIGHT; y += 1) {
 				for (size_t x = 0; x < SCREEN_WIDTH; x += 1) {
-					int rgb = ctx->SCREEN[y][x] ? 255 : 0;
-
 					SDL_Rect square = {
 						.x = x * 10,
 						.y = y * 10,
@@ -207,7 +205,7 @@ static void power_up(struct Machine *ctx)
 					SDL_FillRect(
 						surface,
 						&square,
-						SDL_MapRGB(surface->format, rgb, rgb, rgb)
+						ctx->SCREEN[y][x] ? COLOR_ON : COLOR_OFF
 					);
 				}
 			}

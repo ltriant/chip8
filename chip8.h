@@ -22,6 +22,9 @@
 #define STACK_ADDRESS  0xEA0
 #define SCREEN_ADDRESS 0xF00
 
+#define COLOR_ON  SDL_MapRGB(surface->format, 0x40, 0xa0, 0x70)
+#define COLOR_OFF SDL_MapRGB(surface->format, 0x50, 0x50, 0x50)
+
 struct Machine {
 	bool SCREEN[SCREEN_HEIGHT][SCREEN_WIDTH];
 	bool KEYDOWN[16];
