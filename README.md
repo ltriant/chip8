@@ -23,5 +23,5 @@ $ ./chip8 roms/tetris.ch8
 
 # Things To Do
 
-1. Frame rate needs to be properly capped
-2. The sound timer needs to actually make a sound when it hits zero
+1. The sound timer needs to actually make a sound when it hits zero
+2. Some games still have quirks
