@@ -1,5 +1,5 @@
 CFLAGS+=-std=c99 -Wall -Wextra -Werror -Wformat -Wpointer-arith -pedantic-errors -Os
-LDLIBS=-lsdl2
+LDLIBS=-lSDL2
 
 INSTALL_PROGRAM=/usr/bin/install
 PREFIX=/usr/local
