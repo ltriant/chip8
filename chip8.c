@@ -2,6 +2,8 @@
  * chip8 -- a CHIP-8 emulator
  */
 
+#define _GNU_SOURCE
+
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -249,7 +251,16 @@ int main(int argc, char **argv)
 	int fd = open(romfile, O_RDONLY);
 
 	if (fd == -1) {
-		perror("open");
+		char *error_msg;
+		int rv = asprintf(&error_msg, "Unable to open ROM %s", romfile);
+
+		if (rv == -1) {
+			perror("open");
+		} else {
+			perror(error_msg);
+			free(error_msg);
+		}
+
 		return 1;
 	}
 
@@ -260,6 +271,11 @@ int main(int argc, char **argv)
 	}
 
 	uint8_t *PRG_ROM = calloc(file_stats.st_size, sizeof(uint8_t));
+	if (!PRG_ROM) {
+		perror("calloc");
+		return 1;
+	}
+
 	size_t program_size = slurp(fd, PRG_ROM, file_stats.st_size);
 
 #if DEBUG
