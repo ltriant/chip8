@@ -267,11 +267,11 @@ bool machine_tick(struct Machine *ctx)
 		ctx->V[0xF] = 0;
 		for (size_t y = 0; y < (size_t)n_rows; y += 1) {
 			uint8_t sprite_row = ctx->RAM[ctx->I + y];
-			size_t screen_y = vy + y;
+			size_t screen_y = (vy + y) % SCREEN_HEIGHT;
 
 			for (size_t x = 0; x < 8; x += 1) {
 				bool val = ((sprite_row >> (7 - x)) & 1) == 1;
-				size_t screen_x = vx + x;
+				size_t screen_x = (vx + x) % SCREEN_WIDTH;
 
 				// Collision detection is determined by
 				// checking if a pixel that is on is about to
