@@ -21,21 +21,15 @@ bool machine_tick(struct Machine *ctx)
 	case 0x00:
 	{
 		if (opcode == 0x00e0) {
-#if DEBUG
-			printf("%04X: CLS\n", ctx->PC);
-#endif
+			PRINT_DEBUG("%04X: CLS\n", ctx->PC);
 			memset(ctx->SCREEN, 0, SCREEN_WIDTH * SCREEN_HEIGHT);
 			ctx->PC += 2;
 		} else if (opcode == 0x00ee) {
-#if DEBUG
-			printf("%04X: RET\n", ctx->PC);
-#endif
+			PRINT_DEBUG("%04X: RET\n", ctx->PC);
 			ctx->SP -= 1;
 			ctx->PC = ctx->STACK[(size_t)ctx->SP];
 		} else {
-#if DEBUG
-			printf("%04X: SYS #%04X\n", ctx->PC, nnn);
-#endif
+			PRINT_DEBUG("%04X: SYS #%04X\n", ctx->PC, nnn);
 			ctx->PC = nnn;
 		}
 
@@ -44,18 +38,14 @@ bool machine_tick(struct Machine *ctx)
 
 	case 0x10:
 	{
-#if DEBUG
-		printf("%04X: JP #%04X\n", ctx->PC, nnn);
-#endif
+		PRINT_DEBUG("%04X: JP #%04X\n", ctx->PC, nnn);
 		ctx->PC = nnn;
 		break;
 	}
 	
 	case 0x20:
 	{
-#if DEBUG
-		printf("%04X: CALL #%04X\n", ctx->PC, nnn);
-#endif
+		PRINT_DEBUG("%04X: CALL #%04X\n", ctx->PC, nnn);
 		ctx->STACK[(size_t)ctx->SP] = ctx->PC + 2;
 		ctx->SP += 1;
 		ctx->PC = nnn;
@@ -66,9 +56,7 @@ bool machine_tick(struct Machine *ctx)
 	{
 		size_t vx = (size_t)op1 & 0x0f;
 
-#if DEBUG
-		printf("%04X: SE V%zu, #%02X\n", ctx->PC, vx, op2);
-#endif
+		PRINT_DEBUG("%04X: SE V%zu, #%02X\n", ctx->PC, vx, op2);
 
 		if (ctx->V[vx] == op2)
 			ctx->PC += 2;
@@ -81,9 +69,7 @@ bool machine_tick(struct Machine *ctx)
 	{
 		size_t vx = (size_t)op1 & 0x0f;
 
-#if DEBUG
-		printf("%04X: SE V%zu, #%02X\n", ctx->PC, vx, op2);
-#endif
+		PRINT_DEBUG("%04X: SE V%zu, #%02X\n", ctx->PC, vx, op2);
 
 		if (ctx->V[vx] != op2)
 			ctx->PC += 2;
@@ -97,9 +83,7 @@ bool machine_tick(struct Machine *ctx)
 		size_t vx = (size_t)op1 & 0x0f;
 		size_t vy = ((size_t)op2 & 0xf0) >> 4;
 
-#if DEBUG
-		printf("%04X: SE V%zu, V%zu\n", ctx->PC, vx, vy);
-#endif
+		PRINT_DEBUG("%04X: SE V%zu, V%zu\n", ctx->PC, vx, vy);
 
 		if (ctx->V[vx] == ctx->V[vy])
 			ctx->PC += 2;
@@ -111,9 +95,9 @@ bool machine_tick(struct Machine *ctx)
 	case 0x60:
 	{
 		size_t vx = (size_t)op1 & 0x0f;
-#if DEBUG
-		printf("%04X: LD V%zu, #%02X\n", ctx->PC, vx, op2);
-#endif
+
+		PRINT_DEBUG("%04X: LD V%zu, #%02X\n", ctx->PC, vx, op2);
+
 		ctx->V[vx] = op2;
 		ctx->PC += 2;
 		break;
@@ -122,9 +106,9 @@ bool machine_tick(struct Machine *ctx)
 	case 0x70:
 	{
 		size_t vx = (size_t)op1 & 0x0f;
-#if DEBUG
-		printf("%04X: ADD V%zu, #%02X\n", ctx->PC, vx, op2);
-#endif
+
+		PRINT_DEBUG("%04X: ADD V%zu, #%02X\n", ctx->PC, vx, op2);
+
 		ctx->V[vx] += op2;
 		ctx->PC += 2;
 		break;
@@ -137,64 +121,46 @@ bool machine_tick(struct Machine *ctx)
 
 		switch (op2 & 0x0f) {
 		case 0x00:
-#if DEBUG
-			printf("%04X: LD V%zu, V%zu\n", ctx->PC, vx, vy);
-#endif
+			PRINT_DEBUG("%04X: LD V%zu, V%zu\n", ctx->PC, vx, vy);
 			ctx->V[vx] = ctx->V[vy];
 			break;
 		case 0x01:
-#if DEBUG
-			printf("%04X: OR V%zu, V%zu\n", ctx->PC, vx, vy);
-#endif
+			PRINT_DEBUG("%04X: OR V%zu, V%zu\n", ctx->PC, vx, vy);
 			ctx->V[vx] |= ctx->V[vy];
 			break;
 		case 0x02:
-#if DEBUG
-			printf("%04X: AND V%zu, V%zu\n", ctx->PC, vx, vy);
-#endif
+			PRINT_DEBUG("%04X: AND V%zu, V%zu\n", ctx->PC, vx, vy);
 			ctx->V[vx] &= ctx->V[vy];
 			break;
 		case 0x03:
-#if DEBUG
-			printf("%04X: XOR V%zu, V%zu\n", ctx->PC, vx, vy);
-#endif
+			PRINT_DEBUG("%04X: XOR V%zu, V%zu\n", ctx->PC, vx, vy);
 			ctx->V[vx] ^= ctx->V[vy];
 			break;
 		case 0x04:
 		{
-#if DEBUG
-			printf("%04X: ADD V%zu, V%zu\n", ctx->PC, vx, vy);
-#endif
 			uint16_t result = (uint16_t)ctx->V[vx] + (uint16_t)ctx->V[vy];
+			PRINT_DEBUG("%04X: ADD V%zu, V%zu\n", ctx->PC, vx, vy);
 			ctx->V[0xF] = result > 255 ? 1 : 0;
 			ctx->V[vx] = (uint8_t)(result & 0x00ff);
 			break;
 		}
 		case 0x05:
-#if DEBUG
-			printf("%04X: SUB V%zu, V%zu\n", ctx->PC, vx, vy);
-#endif
+			PRINT_DEBUG("%04X: SUB V%zu, V%zu\n", ctx->PC, vx, vy);
 			ctx->V[0xF] = ctx->V[vy] > ctx->V[vx] ? 0 : 1;
 			ctx->V[vx] -= ctx->V[vy];
 			break;
 		case 0x06:
-#if DEBUG
-			printf("%04X: SHR V%zu\n", ctx->PC, vx);
-#endif
+			PRINT_DEBUG("%04X: SHR V%zu\n", ctx->PC, vx);
 			ctx->V[0xF] = ctx->V[vx] & 0x01;
 			ctx->V[vx] >>= 1;
 			break;
 		case 0x07:
-#if DEBUG
-			printf("%04X: SUBN V%zu, V%zu\n", ctx->PC, vx, vy);
-#endif
+			PRINT_DEBUG("%04X: SUBN V%zu, V%zu\n", ctx->PC, vx, vy);
 			ctx->V[0xF] = ctx->V[vy] > ctx->V[vx] ? 1 : 0;
 			ctx->V[vx] = ctx->V[vy] - ctx->V[vx];
 			break;
 		case 0x0e:
-#if DEBUG
-			printf("%04X: SHL V%zu\n", ctx->PC, vx);
-#endif
+			PRINT_DEBUG("%04X: SHL V%zu\n", ctx->PC, vx);
 			ctx->V[0xF] = (ctx->V[vx] & 0x80) >> 7;
 			ctx->V[vx] <<= 1;
 			break;
@@ -209,9 +175,7 @@ bool machine_tick(struct Machine *ctx)
 		size_t vx = op1 & 0x0f;
 		size_t vy = (op2 & 0xf0) >> 4;
 
-#if DEBUG
-		printf("%04X: SNE V%zu, V%zu\n", ctx->PC, vx, vy);
-#endif
+		PRINT_DEBUG("%04X: SNE V%zu, V%zu\n", ctx->PC, vx, vy);
 
 		if (ctx->V[vx] != ctx->V[vy])
 			ctx->PC += 2;
@@ -222,9 +186,7 @@ bool machine_tick(struct Machine *ctx)
 
 	case 0xa0:
 	{
-#if DEBUG
-		printf("%04X: LD I, #%04X\n", ctx->PC, nnn);
-#endif
+		PRINT_DEBUG("%04X: LD I, #%04X\n", ctx->PC, nnn);
 		ctx->I = nnn;
 		ctx->PC += 2;
 		break;
@@ -232,9 +194,7 @@ bool machine_tick(struct Machine *ctx)
 
 	case 0xb0:
 	{
-#if DEBUG
-		printf("%04X: JP V0, #%04X\n", ctx->PC, nnn);
-#endif
+		PRINT_DEBUG("%04X: JP V0, #%04X\n", ctx->PC, nnn);
 		ctx->PC = nnn + (uint16_t)ctx->V[0];
 		break;
 	}
@@ -242,9 +202,8 @@ bool machine_tick(struct Machine *ctx)
 	case 0xc0:
 	{
 		size_t vx = op1 & 0x0f;
-#if DEBUG
-		printf("%04X: RND V%zu, #%04X\n", ctx->PC, vx, op2);
-#endif
+
+		PRINT_DEBUG("%04X: RND V%zu, #%04X\n", ctx->PC, vx, op2);
 		uint8_t rnd = (uint8_t) rand();
 		ctx->V[vx] = rnd & op2;
 		ctx->PC += 2;
@@ -257,12 +216,8 @@ bool machine_tick(struct Machine *ctx)
 		uint8_t vy = ctx->V[((size_t)op2 & 0xf0) >> 4];
 		uint8_t n_rows = op2 & 0x0f;
 
-#if DEBUG
-		size_t x = (size_t)op1 & 0x0f;
-		size_t y = ((size_t)op2 & 0xf0) >> 4;
-		printf("%04X: DRW V%zu (%hhu), V%zu (%hhu), #%02X\n",
-			ctx->PC, x, vx, y, vy, n_rows);
-#endif
+		PRINT_DEBUG("%04X: DRW V%zu (%hhu), V%zu (%hhu), #%02X\n",
+			ctx->PC, (size_t)op1 & 0x0f, vx, ((size_t)op2 & 0xf0) >> 4, vy, n_rows);
 
 		ctx->V[0xF] = 0;
 		for (size_t y = 0; y < (size_t)n_rows; y += 1) {
@@ -294,18 +249,16 @@ bool machine_tick(struct Machine *ctx)
 
 		switch (op2) {
 		case 0x9e:
-#if DEBUG
-			printf("%04X: SKP V%zu\n", ctx->PC, vx);
-#endif
+			PRINT_DEBUG("%04X: SKP V%zu\n", ctx->PC, vx);
+
 			if (ctx->KEYDOWN[idx])
 				ctx->PC += 2;
 
 			ctx->PC += 2;
 			break;
 		case 0xa1:
-#if DEBUG
-			printf("%04X: SKNP V%zu\n", ctx->PC, vx);
-#endif
+			PRINT_DEBUG("%04X: SKNP V%zu\n", ctx->PC, vx);
+
 			if (!ctx->KEYDOWN[idx])
 				ctx->PC += 2;
 
@@ -322,48 +275,33 @@ bool machine_tick(struct Machine *ctx)
 
 		switch (op2) {
 		case 0x07:
-#if DEBUG
-			printf("%04X: LD V%zu, DT\n", ctx->PC, vx);
-#endif
+			PRINT_DEBUG("%04X: LD V%zu, DT\n", ctx->PC, vx);
 			ctx->V[vx] = ctx->DT;
 			break;
 		case 0x0a:
-			// LD Vx, K
-#if DEBUG
-			printf("%04X: LD V%zu, K\n", ctx->PC, vx);
-#endif
+			PRINT_DEBUG("%04X: LD V%zu, K\n", ctx->PC, vx);
 			ctx->waiting_for_keypress = true;
 			ctx->key_wait_reg = vx;
 			break;
 		case 0x15:
-#if DEBUG
-			printf("%04X: LD DT, V%zu\n", ctx->PC, vx);
-#endif
+			PRINT_DEBUG("%04X: LD DT, V%zu\n", ctx->PC, vx);
 			ctx->DT = ctx->V[vx];
 			break;
 		case 0x18:
-#if DEBUG
-			printf("%04X: LD ST, V%zu\n", ctx->PC, vx);
-#endif
+			PRINT_DEBUG("%04X: LD ST, V%zu\n", ctx->PC, vx);
 			ctx->ST = ctx->V[vx];
 			break;
 		case 0x1e:
-#if DEBUG
-			printf("%04X: ADD I, V%zu\n", ctx->PC, vx);
-#endif
+			PRINT_DEBUG("%04X: ADD I, V%zu\n", ctx->PC, vx);
 			ctx->I += ctx->V[vx];
 			break;
 		case 0x29:
 			ctx->I = ctx->V[vx] * 5;
-#if DEBUG
-			printf("%04X: LD F, V%zu\n", ctx->PC, vx);
-#endif
+			PRINT_DEBUG("%04X: LD F, V%zu\n", ctx->PC, vx);
 			break;
 		case 0x33:
 		{
-#if DEBUG
-			printf("%04X: LD B, V%zu\n", ctx->PC, vx);
-#endif
+			PRINT_DEBUG("%04X: LD B, V%zu\n", ctx->PC, vx);
 
 			uint8_t hundreds = ctx->V[vx] / 100;
 			ctx->RAM[ctx->I] = hundreds;
@@ -377,16 +315,12 @@ bool machine_tick(struct Machine *ctx)
 			break;
 		}
 		case 0x55:
-#if DEBUG
-			printf("%04X: LD [I], V%zu\n", ctx->PC, vx);
-#endif
+			PRINT_DEBUG("%04X: LD [I], V%zu\n", ctx->PC, vx);
 			for (size_t i = 0; i <= (size_t)vx; i += 1)
 				ctx->RAM[ctx->I + i] = ctx->V[i];
 			break;
 		case 0x65:
-#if DEBUG
-			printf("%04X: LD V%zu, [I]\n", ctx->PC, vx);
-#endif
+			PRINT_DEBUG("%04X: LD V%zu, [I]\n", ctx->PC, vx);
 			for (size_t i = 0; i <= (size_t)vx; i += 1)
 				ctx->V[i] = ctx->RAM[ctx->I + i];
 			break;

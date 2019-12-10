@@ -244,10 +244,8 @@ int main(int argc, char **argv)
 	}
 
 	char *romfile = argv[1];
-#if DEBUG
-	printf("Opening ROM: %s\n", romfile);
-#endif
 
+	PRINT_DEBUG("Opening ROM: %s\n", romfile);
 	int fd = open(romfile, O_RDONLY);
 
 	if (fd == -1) {
@@ -278,9 +276,7 @@ int main(int argc, char **argv)
 
 	size_t program_size = slurp(fd, PRG_ROM, file_stats.st_size);
 
-#if DEBUG
-	printf("PRG_ROM size: %zu\n", program_size);
-#endif
+	PRINT_DEBUG("PRG_ROM size: %zu\n", program_size);
 
 	struct Machine machine;
 	machine_init(&machine, PRG_ROM, program_size);

@@ -6,6 +6,12 @@
 // Prints disassembly to stdout
 #define DEBUG 0
 
+#if DEBUG
+#define PRINT_DEBUG(...) do { printf(__VA_ARGS__); } while(0);
+#else
+#define PRINT_DEBUG(...) {}
+#endif
+
 // 64x32 display, with the origin at the top-left of the screen
 #define SCREEN_WIDTH  64
 #define SCREEN_HEIGHT 32
@@ -22,8 +28,8 @@
 #define STACK_ADDRESS  0xEA0
 #define SCREEN_ADDRESS 0xF00
 
-#define COLOR_ON  SDL_MapRGB(surface->format, 0x40, 0xa0, 0x70)
-#define COLOR_OFF SDL_MapRGB(surface->format, 0x50, 0x50, 0x50)
+#define COLOR_ON  SDL_MapRGB(surface->format, 0x30, 0xbb, 0x30)
+#define COLOR_OFF SDL_MapRGB(surface->format, 0x30, 0x30, 0x30)
 
 struct Machine {
 	bool SCREEN[SCREEN_HEIGHT][SCREEN_WIDTH];
