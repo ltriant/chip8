@@ -2,6 +2,8 @@
 
 An emulator for the CHIP-8 system, because every emulator developer should probably write one for fun.
 
+![Pong? You mean paddle wars, right?](pong.png)
+
 # Building and Running
 
 [SDL2](https://libsdl.org/) is required for the graphics, and it can be installed via many different package managers:
@@ -18,7 +20,7 @@ After that, it can be built with `make`:
 
 ```
 $ make all
-$ ./chip8 roms/tetris.ch8
+$ ./chip8 roms/pong.ch8
 ```
 
 # Things To Do
