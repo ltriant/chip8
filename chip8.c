@@ -63,6 +63,7 @@ static void power_up(struct Machine *ctx)
 	SDL_Surface *surface = SDL_GetWindowSurface(window);
 	SDL_Event e;
 	bool quit = false;
+	bool paused = false;
 
 	struct timeval timer_clock_prev;
 	gettimeofday(&timer_clock_prev, NULL);
@@ -128,6 +129,9 @@ static void power_up(struct Machine *ctx)
 				case SDLK_v:
 					machine_keydown(ctx, 0xf);
 					break;
+				case SDLK_p:
+					paused = ! paused;
+					break;
 				}
 
 				break;
@@ -190,6 +194,11 @@ static void power_up(struct Machine *ctx)
 				quit = true;
 				break;
 			}
+		}
+
+		if (paused) {
+			usleep(5000);
+			continue;
 		}
 
 		bool should_render = machine_tick(ctx);
