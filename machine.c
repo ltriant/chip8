@@ -137,30 +137,49 @@ bool machine_tick(struct Machine *ctx)
 			ctx->V[vx] ^= ctx->V[vy];
 			break;
 		case 0x04:
-		{
+			PRINT_DEBUG("%04X: ADD V%zu (%hhu), V%zu (%hhu)\n",
+					ctx->PC,
+					vx, ctx->V[vx],
+					vy, ctx->V[vy]);
+
 			uint16_t result = (uint16_t)ctx->V[vx] + (uint16_t)ctx->V[vy];
-			PRINT_DEBUG("%04X: ADD V%zu, V%zu\n", ctx->PC, vx, vy);
 			ctx->V[0xF] = result > 255 ? 1 : 0;
 			ctx->V[vx] = (uint8_t)(result & 0x00ff);
 			break;
-		}
 		case 0x05:
-			PRINT_DEBUG("%04X: SUB V%zu, V%zu\n", ctx->PC, vx, vy);
-			ctx->V[0xF] = ctx->V[vy] > ctx->V[vx] ? 0 : 1;
-			ctx->V[vx] -= ctx->V[vy];
+			PRINT_DEBUG("%04X: SUB V%zu (%hhu), V%zu (%hhu)\n",
+					ctx->PC,
+					vx, ctx->V[vx],
+					vy, ctx->V[vy]);
+
+			ctx->V[0xF] = (ctx->V[vy] > ctx->V[vx]) ? 0 : 1;
+
+			// Two's complement arithmetic. This handles any
+			// negative numbers, underflowing, etc.
+			ctx->V[vx] += ~ctx->V[vy] + 1;
+
 			break;
 		case 0x06:
-			PRINT_DEBUG("%04X: SHR V%zu\n", ctx->PC, vx);
+			PRINT_DEBUG("%04X: SHR V%zu (%hhu)\n",
+					ctx->PC, vx, ctx->V[vx]);
 			ctx->V[0xF] = ctx->V[vx] & 0x01;
 			ctx->V[vx] >>= 1;
 			break;
 		case 0x07:
-			PRINT_DEBUG("%04X: SUBN V%zu, V%zu\n", ctx->PC, vx, vy);
-			ctx->V[0xF] = ctx->V[vy] > ctx->V[vx] ? 1 : 0;
-			ctx->V[vx] = ctx->V[vy] - ctx->V[vx];
+			PRINT_DEBUG("%04X: SUBN V%zu (%hhu), V%zu (%hhu)\n",
+					ctx->PC,
+					vx, ctx->V[vx],
+					vy, ctx->V[vy]);
+
+			ctx->V[0xF] = (ctx->V[vx] > ctx->V[vy]) ? 0 : 1;
+
+			// Two's complement arithmetic. As explained above.
+			ctx->V[vx] = ctx->V[vy] + (~ctx->V[vx] + 1);
+
 			break;
 		case 0x0e:
-			PRINT_DEBUG("%04X: SHL V%zu\n", ctx->PC, vx);
+			PRINT_DEBUG("%04X: SHL V%zu (%hhu)\n",
+					ctx->PC, vx, ctx->V[vx]);
 			ctx->V[0xF] = (ctx->V[vx] & 0x80) >> 7;
 			ctx->V[vx] <<= 1;
 			break;
