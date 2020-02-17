@@ -24,6 +24,9 @@
 #define TIMER_RATE 60.0
 #define US_PER_TIMER_CLOCK ((int)((1.0 / TIMER_RATE) * 1000.0 * 1000.0))
 
+// The number of audio samples to generate a beep at 44.1kHz
+#define SAMPLES_PER_BEEP 1024
+
 #define PRGROM_ADDRESS 0x200
 #define STACK_ADDRESS  0xEA0
 #define SCREEN_ADDRESS 0xF00

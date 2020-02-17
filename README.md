@@ -25,5 +25,4 @@ $ ./chip8 roms/pong.ch8
 
 # Things To Do
 
-1. The sound timer needs to actually make a sound when it hits zero
-2. Some games still have quirks
+1. Some games still have quirks. Some need to run at different clock rates, and some expect different behaviours. Probably not going to fix this.
