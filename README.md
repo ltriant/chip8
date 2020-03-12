@@ -4,7 +4,7 @@ An emulator for the CHIP-8 system, because every emulator developer should proba
 
 ![Pong? You mean paddle wars, right?](pong.png)
 
-# Building and Running
+# Building
 
 [SDL2](https://libsdl.org/) is required for the graphics, and it can be installed via many different package managers:
 
@@ -20,7 +20,31 @@ After that, it can be built with `make`:
 
 ```
 $ make all
+```
+
+# Running
+
+ROMs can be sourced from anywhere you like, however I recommend getting them from [dmatlack/chip8](https://github.com/dmatlack/chip8/tree/master/roms/games). ROMs can be invoked with the path to the ROM as the argument:
+
+```
 $ ./chip8 roms/pong.ch8
+```
+
+# Keyboard
+
+The original CHIP-8 keypad is on the left, and what I've mapped it to on a QWERTY keyboard is on the right:
+
+```
+Keypad                   Keyboard
++-+-+-+-+                +-+-+-+-+
+|1|2|3|C|                |1|2|3|4|
++-+-+-+-+                +-+-+-+-+
+|4|5|6|D|                |Q|W|E|R|
++-+-+-+-+       =>       +-+-+-+-+
+|7|8|9|E|                |A|S|D|F|
++-+-+-+-+                +-+-+-+-+
+|A|0|B|F|                |Z|X|C|V|
++-+-+-+-+                +-+-+-+-+
 ```
 
 # Things To Do
